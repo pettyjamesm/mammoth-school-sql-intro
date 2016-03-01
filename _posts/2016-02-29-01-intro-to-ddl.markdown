@@ -91,7 +91,7 @@ Those `FOREIGN KEY` declarations probably look a little weird. Those essentially
 
     FOREIGN KEY (user_id) REFERENCES users(id)
 
-which means that all values rows in orders must have values for user_id exist in the users table as id. This prevents the possibility of rows being inserted into the orders table that don't make any sense.
+which means that all rows in orders must have a value for user_id that exists in the users table as id. This prevents the possibility of rows being inserted into the orders table that don't make any sense.
 
 We could copy / paste the definitions above, but since we have the sqlite console open already, let's just tell sqlite to execute sql from the ddl file. Enter the following command to read the 01-basic-ddl.sql file:
 
