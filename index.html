@@ -1,0 +1,18 @@
+---
+layout: default
+---
+{% assign guides = (site.posts | sort 'number') %}
+<div class="home">
+  <h1 class="page-heading">Interactive Guides</h1>
+  <ul class="post-list">
+    {% for lesson in guides %}
+      <li>
+        <h3>
+          <span class="post-meta">Lesson {{ lesson.number }}:</span>
+          <a class="post-link" href="{{ lesson.url | prepend: site.baseurl }}">{{ lesson.title }}</a>
+        </h3>
+      
+      </li>
+    {% endfor %}
+  </ul>
+</div>

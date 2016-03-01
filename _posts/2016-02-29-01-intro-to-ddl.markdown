@@ -1,0 +1,76 @@
+---
+layout: post
+title:  "Using DDL for Fun and Profit"
+number: 1
+---
+
+# Running the Interactive Console {#interactive-console}
+
+Now that we've got our environments up and running, we should get down to actually using the sqlite console. sqlite has a nice property of allowing you to use it in a temporary database that only exists for the duration of a session. 
+
+Forgetting all of your data isn't normally a desirable property of a database, but it means that we can always reset the contents of our database and start fresh. To do this, you just launch sqlite without passing any arguments like so:
+
+{% highlight bash %}
+$ sqlite3
+{% endhighlight %}
+
+You should see something that looks like this:
+
+![SQLite With Temporary Database]({{ site.baseurl }}/assets/01/sqlite-in-memory.png)
+
+Note the warning message:
+
+    Connected to a transient in-memory database.
+    Use ".open FILENAME" to reopen on a persistent database.
+
+Great. That means that as soon as we exit the sqlite console, everything we did is gone. You can quit the sqlite console by typing
+
+    .quit
+
+In the sqlite console, special commands that are not interpreted as sql start with `.<command>`. For instance `.help` will show you a list of other available commands. Finally, if you get stuck trying to exit the console, `CTRL + D` will also work to get you out of the sqlite console.
+
+Go ahead and try out `.quit` and you should be back out of the sqlite console
+
+![SQLite quit]({{ site.baseurl }}/assets/01/sqlite-quit.png)
+
+# Keeping the Database
+While throwing data away is sometimes useful, it's not always what you want. To keep data around between sessions, you launch sqlite and give it a file to store the database contents in. If the file already exists, it will load with all the existing data. If the file doesn't exist yet, it'll create the file and store data in it.
+
+Let's try creating a database with persistent data. Run the command below:
+
+{% highlight bash %}
+$ sqlite3 mammoth.db
+{% endhighlight %}
+
+You should see the familiar prompt, but this time the database will exist between sessions
+
+![SQLite file backed database]({{ site.baseurl }}/assets/01/sqlite-filedb.png)
+
+
+# Creating Tables (finally) {#creating-tables}
+So we've got the basics about the sqlite console, let's actual use some DDL! The table definitions we'll use in the next lessons are in `01-basic-ddl.sql` and are as follows:
+
+{% highlight sql %}
+{% include 01-basic-ddl.sql %}
+{% endhighlight %}
+
+Those `FOREIGN KEY` declarations probably look a little weird. Those essentially enforce that values inserted into the table have corresponding values in another table. For instance, the orders table has the following constraint:
+
+    FOREIGN KEY (user_id) REFERENCES users(id)
+
+which means that all values rows in orders must have values for user_id exist in the users table as id. This prevents the possibility of rows being inserted into the orders table that don't make any sense.
+
+We could copy / paste the definitions above, but since we have the sqlite console open already, let's just tell sqlite to execute sql from the ddl file. Enter the following command to read the 01-basic-ddl.sql file:
+
+    sqlite> .read 01-basic-ddl.sql
+
+If you saw a blank line output into the console and nothing else, you probably did it right. Let's make sure the tables actually exist by using the sqlite `.schema` command:
+
+    sqlite> .schema
+
+You should see some output that looks like the following:
+
+![Schema Output]({{ site.baseurl }}/assets/01/sqlite-schema.png)
+
+If your output looks like above, then we're ready to start working with some data.
+
