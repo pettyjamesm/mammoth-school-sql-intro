@@ -1,9 +1,13 @@
 ---
+title: Interactive Lessons
 layout: default
 ---
 {% assign guides = (site.posts | sort 'number') %}
 <div class="home">
-  <h1 class="page-heading">Interactive Guides</h1>
+  <h1>Interactive Lessons</h1>
+  <p class="page-content">
+    Follow the instructions in the <a class="" href="{{ "/setup" | prepend: site.baseurl }}">Setup Guide</a> before getting started on lessons.
+  </p>
   <ul class="post-list">
     {% for lesson in guides %}
       <li>
@@ -16,3 +20,4 @@ layout: default
     {% endfor %}
   </ul>
 </div>
+
