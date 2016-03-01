@@ -17,7 +17,7 @@ INSERT INTO base_items (id, name) VALUES (1, 'one'), (2, 'two'), (3, 'environmen
 
 INSERT INTO associations (base_item_id, value) VALUES (1, 1), (2, 1), (2, 1), (3, 1), (3, 1), (3, 1);
 
-SELECT name || ': ' ||  case SUM(value) when 3 then 'YES' else 'FAILURE' end
+SELECT name || ': ' ||  case SUM(value) when 3 then 'YES' else 'NO' end
 FROM 
     base_items JOIN associations 
         ON base_items.id = associations.base_item_id
