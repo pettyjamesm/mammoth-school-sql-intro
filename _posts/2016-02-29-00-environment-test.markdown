@@ -7,7 +7,7 @@ Before we start hacking away in the sqlite console, we need to make sure everyon
 
 # Launch Terminal
 We're going to be doing a lot in the terminal for the interactive portions, which can be tricky. We won't have a lot of time to cover the terminal itself, but shout if you get lost and I'll swing by to help you out.
-First, find the Terminal app in spotlight like so:
+First, find and launch the Terminal app in spotlight like so:
 
 ![Finder Terminal]({{ site.baseurl }}/assets/00/spotlight-terminal.png)
 
@@ -39,3 +39,5 @@ $ sqlite3 < 00-environment-test.sql
 The output should look something like below. If not, let's figure out why before proceeding.
 
 ![Terminal Test Ok]({{ site.baseurl }}/assets/00/terminal-test-ok.png)
+
+If everything above looks good, you're ready to get started with [Lesson 1 - DDL]({{ site.baseurl }}/{% post_url 2016-02-29-01-intro-to-ddl %}).

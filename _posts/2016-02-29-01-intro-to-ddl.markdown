@@ -6,9 +6,13 @@ number: 1
 
 # Running the Interactive Console {#interactive-console}
 
-Now that we've got our environments up and running, we should get down to actually using the sqlite console. sqlite has a nice property of allowing you to use it in a temporary database that only exists for the duration of a session. 
+Now that we've got our environments up and running, we should get down to actually using the sqlite console. 
 
-Forgetting all of your data isn't normally a desirable property of a database, but it means that we can always reset the contents of our database and start fresh. To do this, you just launch sqlite without passing any arguments like so:
+sqlite has the nice property of letting you to use it with a temporary database that disappears after you exit the sqlite console. 
+
+While losing all of your data isn't normally a desirable quality in a database, it's pretty useful when you just want to start writing some SQL to experiment. 
+
+To do this, you can launch the sqlite console by just running the command:
 
 {% highlight shell %}
 $ sqlite3
@@ -23,11 +27,13 @@ Note the warning message:
     Connected to a transient in-memory database.
     Use ".open FILENAME" to reopen on a persistent database.
 
-Great. That means that as soon as we exit the sqlite console, everything we did is gone. You can quit the sqlite console by typing
+Great. That means that as soon as we exit the sqlite console, everything from that session is gone.
 
-    .quit
+To exit the console, type the following command:
 
-In the sqlite console, special commands that are not interpreted as sql start with `.<command>`. For instance `.help` will show you a list of other available commands. Finally, if you get stuck trying to exit the console, `CTRL + D` will also work to get you out of the sqlite console.
+    sqlite> .quit
+
+In the sqlite console you can issue special commands that won't be interpreted as SQL. The commands all start with '.'. For instance `sqlite> .help` will show you a list of other available commands. If you get stuck trying to exit the console and `sqlite> .quit` doesn't seem to be working, `CTRL + D` will also work to get you out of the sqlite console.
 
 Go ahead and try out `.quit` and you should be back out of the sqlite console
 
@@ -99,5 +105,5 @@ You should see some output that looks like the following:
 
 ![Schema Output]({{ site.baseurl }}/assets/01/sqlite-schema.png)
 
-If your output looks like above, then we're ready to start working with some data.
+If your output looks like above, then we're ready to [start working with some data]({{ site.baseurl }}/{% post_url 2016-03-01-02-intro-to-dml %}).
 
