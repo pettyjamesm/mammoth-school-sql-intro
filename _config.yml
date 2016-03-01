@@ -11,7 +11,7 @@ email: jpetty@harrys.com
 description: > # this means to ignore newlines until "baseurl:"
   Let's learn some SQL
 baseurl: "/guides" # the subpath of your site, e.g. /blog
-url: "http://yourdomain.com" # the base hostname & protocol for your site
+url: "http://pettyjamesm.github.io/mammoth-school-sql-intro" # the base hostname & protocol for your site
 permalink: ':slug.html'
 
 # Build settings
