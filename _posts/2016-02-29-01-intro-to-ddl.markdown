@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Using DDL for Fun and Profit"
+title:  "Using the DDL for Fun and Profit"
 number: 1
 ---
 
