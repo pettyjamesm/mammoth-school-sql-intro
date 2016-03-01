@@ -10,7 +10,7 @@ Now that we've got our environments up and running, we should get down to actual
 
 Forgetting all of your data isn't normally a desirable property of a database, but it means that we can always reset the contents of our database and start fresh. To do this, you just launch sqlite without passing any arguments like so:
 
-{% highlight bash %}
+{% highlight shell %}
 $ sqlite3
 {% endhighlight %}
 
@@ -38,7 +38,7 @@ While throwing data away is sometimes useful, it's not always what you want. To 
 
 Let's try creating a database with persistent data. Run the command below:
 
-{% highlight bash %}
+{% highlight shell %}
 $ sqlite3 mammoth.db
 {% endhighlight %}
 

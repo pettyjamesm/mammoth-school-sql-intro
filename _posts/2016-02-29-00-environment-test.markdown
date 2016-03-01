@@ -20,7 +20,7 @@ For the interactive portions, we're going to be using some scripts pre-packaged 
 
 The command to change directories is called `cd` for "change directory". By default terminal opens in your "home" folder (shown as "~") and so we're navigating from there. Since my copy of the repository is on my Desktop, I'll have to navigate by typing:
 
-{% highlight bash %}
+{% highlight shell %}
 $ cd Desktop/mammoth-school-sql-intro/sql
 {% endhighlight %}
 
@@ -32,7 +32,7 @@ You should now see something like this:
 # Run the Environment Test Script
 Finally, we're going to try running the environment test script to verify everyones machine has a working version of sqlite. To do this, I've put together a script that runs some basic operations to verify basic functionality. Run this script by entering the following command:
 
-{% highlight bash %}
+{% highlight shell %}
 $ sqlite3 < 00-environment-test.sql
 {% endhighlight %}
 
