@@ -31,49 +31,44 @@
 
 -- Seed our users into the database. Email addresses have been changed to protect the innocent from spammers.
 INSERT INTO 
-    users (email_address, first_name, last_name, is_admin) 
+    users (id, email_address, first_name, last_name, is_admin) 
 VALUES
-    ('jpetty@example.com', 'James', 'Petty', 1),
-    ('chris@example.com', 'Chris', 'Clouten', 1),
-    ('bigfoot@example.com', NULL, NULL, 0),
-    ('imissthe70s@example.com', 'Cher', NULL, 0);
+    (1, 'jpetty@example.com', 'James', 'Petty', 1),
+    (2, 'chris@example.com', 'Chris', 'Clouten', 1),
+    (3, 'bigfoot@example.com', NULL, NULL, 0),
+    (4, 'imissthe70s@example.com', 'Cher', NULL, 0);
 
 -- Seed some products so that people can buy stuff
 INSERT INTO
-    products (name, price)
+    products (id, name, price)
 VALUES
-    ('Daily Face Wash', 7.00),
-    ('Truman Set', 15.00),
-    ('Razor Blades', 16.00),
-    ('Foaming Shave Gel', 6.00);
+    (1, 'Daily Face Wash', 7.00),
+    (2, 'Truman Set', 15.00),
+    (3, 'Razor Blades', 16.00),
+    (4, 'Foaming Shave Gel', 6.00);
 
--- Randomize orders from users multiple times, leaves one user without any orders
-INSERT INTO orders (user_id, placed_at)
-SELECT id, datetime('now',  (abs(random() % (86400 * 90)) * -1) || ' seconds')
-FROM users ORDER BY random() LIMIT 3;
+-- Make some orders with some time somewhat shuffled around
+INSERT INTO 
+    orders (id, user_id, placed_at)
+VALUES
+    (1, 2, '2015-12-04 06:02:30'),
+    (2, 4, '2016-02-25 04:45:14'),
+    (3, 3, '2016-02-24 04:12:05'),
+    (4, 2, '2015-12-29 08:30:09'),
+    (5, 3, '2015-12-20 20:26:32');
 
-INSERT INTO orders (user_id, placed_at)
-SELECT id, datetime('now',  (abs(random() % (86400 * 90)) * -1) || ' seconds')
-FROM users 
-WHERE id IN (select user_id from orders)
-ORDER BY random() LIMIT 2;
-
--- Randomize the order items such that each order has at least one item in it
-INSERT INTO order_products (order_id, product_id)
-WITH order_product_matches AS (
-    SELECT o.id as order_id, p.id as product_id, random() as shuffle FROM orders o JOIN products p ON (1 = 1)
-) SELECT order_id, product_id FROM order_product_matches GROUP BY order_id HAVING max(shuffle);
-
--- Randomly assign more products to the orders if any exist
-INSERT INTO order_products (order_id, product_id)
-WITH order_product_matches AS (
-    SELECT o.id as order_id, p.id as product_id, random() as shuffle FROM orders o JOIN products p ON (1 = 1) ORDER BY random() LIMIT 5
-) 
-SELECT order_id, product_id 
-FROM order_product_matches opm
-WHERE
-    NOT EXISTS (SELECT 1 FROM order_products op WHERE opm.order_id = op.order_id AND opm.product_id = op.product_id)
-GROUP BY order_id HAVING max(shuffle);
+-- Assign some products to those orders
+INSERT INTO 
+    order_products (id, order_id, product_id)
+VALUES
+    (1, 1, 4),
+    (2, 2, 1),
+    (3, 3, 3),
+    (4, 4, 2),
+    (5, 5, 4),
+    (6, 1, 2),
+    (7, 2, 4),
+    (8, 3, 1);
 
 
 
