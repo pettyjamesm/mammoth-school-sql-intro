@@ -7,16 +7,52 @@ number: 2
 # DML Basics {#dml-basics}
 The DML is where most of the action happens in SQL. It's how you store, access, and analyze data. There's a lot going on over all, and we might end up jumping around a little bit. We'll try to cover as much as we can to at least give you a starting point in working with SQL DML statements.
 
+## Creating Tables, again {#create-tables-again}
+Before we begin, we need to bring our database to a clean slate based on the previous [intro to DDL]({{ site.baseurl }}/{% post_url 2016-02-29-01-intro-to-ddl %}).
+
+So start the database in a Terminal window:
+
+{% highlight shell %}
+$ sqlite3 mammoth-2.db
+{% endhighlight %}
+
+And then execute these statements using the venerable Copy & Paste approach:
+
+{% highlight sql %}
+CREATE TABLE users (
+    id integer primary key,
+    email_address varchar not null,
+    first_name varchar,
+    last_name varchar,
+    is_admin boolean not null default false
+);
+
+CREATE TABLE products (
+    id integer primary key,
+    name varchar not null,
+    price decimal(5, 2) not null
+);
+
+CREATE TABLE orders (
+    id integer primary key,
+    user_id integer not null,
+    placed_at timestamp not null default current_timestamp,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE order_products (
+    id integer primary key,
+    order_id integer not null,
+    product_id integer not null,
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+{% endhighlight %}
+
+Awesome, let's get to work.
+
 ## Storing Data {#storing-data}
-Before we can start analyzing data, we've got to find some data to analyze. I've added a script that will seed your database with some values we're going to start working with.
-
-Run that script using the read command below:
-
-    sqlite> .read 02-dml-seed-data.sql
-
-Let me know if you see an error message after running the above
-
-If you look into that script you just ran, you'd see some SQL statements that look like this:
+Before we can start analyzing data, we've got to find some data to analyze.  Here's some seed data for the products table:
 
 {% highlight sql %}
 INSERT INTO
@@ -31,7 +67,7 @@ VALUES
 This probably looks pretty intuitive, but the syntax here is generally:
 
 {% highlight sql %}
-INSERT INTO 
+INSERT INTO
     table_name (column_name_1, column_name_2, ...)
 VALUES
     (row1_column1_value, row1_column2_value, ...),
@@ -40,7 +76,8 @@ VALUES
 
 In the above, the line-breaks are purely for readability. You can safely put this all on one line and it's just as valid.
 
-You might also notice that we didn't assign any value to the `id` column. Since `id` is our primary key, the database is going to generate a unique number for each one that we insert.
+You might also notice that we didn't assign any value to the `id` column. Since `id` is our primary key, the database is
+going to generate a unique number for each one that we insert.
 
 
 ## Querying Basics {#querying-basics}
@@ -60,7 +97,9 @@ That's right, but it's a little annoying that you have to correlate the columns 
 
 To turn on headers in the query output, enter the following command into the sqlite console:
 
-    sqlite> .headers on
+{% highlight sql %}
+.headers on
+{% endhighlight %}
 
 With that, you should see the following:
 
@@ -69,7 +108,7 @@ With that, you should see the following:
 If you want to select all columns for a given table, you can actually omit spelling all of them out and just use:
 
 {% highlight sql %}
-SELECT * FROM table_name;
+SELECT * FROM products;
 {% endhighlight %}
 
 
@@ -79,5 +118,3 @@ SELECT * FROM table_name;
     - what happens if you add a user to the database and don't set a value for the `is_admin` column?
 1. Create an order for yourself (note: the placed_at value will have to be passed in the format: 'YEAR-MM-DD HH:MM:SS')
 1. Put some items in that order
-
-

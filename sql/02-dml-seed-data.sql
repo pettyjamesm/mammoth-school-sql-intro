@@ -35,7 +35,7 @@ INSERT INTO
 VALUES
     (1, 'jpetty@example.com', 'James', 'Petty', 1),
     (2, 'chris@example.com', 'Chris', 'Clouten', 1),
-    (3, 'bigfoot@example.com', NULL, NULL, 0),
+    (3, 'bigfoot@gmail.com', NULL, NULL, 0),
     (4, 'imissthe70s@example.com', 'Cher', NULL, 0);
 
 -- Seed some products so that people can buy stuff
