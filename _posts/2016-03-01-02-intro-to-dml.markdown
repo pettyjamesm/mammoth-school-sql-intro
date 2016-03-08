@@ -112,6 +112,196 @@ SELECT * FROM products;
 {% endhighlight %}
 
 
+### Adding more data
+These inserts will add more data for us to play with.  Do Copy & Paste but also think about the statements.
+
+{% highlight sql %}
+INSERT INTO
+    users (id, email_address, first_name, last_name, is_admin)
+VALUES
+    (1, 'jpetty@example.com', 'James', 'Petty', 1),
+    (2, 'chris@example.com', 'Chris', 'Clouten', 1),
+    (3, 'bigfoot@gmail.com', NULL, NULL, 0),
+    (4, 'imissthe70s@example.com', 'Cher', NULL, 0);
+
+INSERT INTO
+    orders (id, user_id, placed_at)
+VALUES
+    (1, 2, '2015-12-04 06:02:30'),
+    (2, 4, '2016-02-25 04:45:14'),
+    (3, 3, '2016-02-24 04:12:05'),
+    (4, 2, '2015-12-29 08:30:09'),
+    (5, 3, '2015-12-20 20:26:32');
+
+INSERT INTO
+    order_products (id, order_id, product_id)
+VALUES
+    (1, 1, 4),
+    (2, 2, 1),
+    (3, 3, 3),
+    (4, 4, 2),
+    (5, 5, 4),
+    (6, 1, 2),
+    (7, 2, 4),
+    (8, 3, 1);
+{% endhighlight %}
+
+
+### Finding prices
+Let's continue with querying data.
+
+How much does the Daily Face Wash cost?
+
+{% highlight sql %}
+SELECT price
+FROM products
+WHERE name = 'Daily Face Wash';
+{% endhighlight %}
+
+*Result:*
+<pre>
+ price
+ 7
+</pre>
+
+###  Which orders were placed last year?
+
+The `WHERE` clause is very flexible.
+
+{% highlight sql %}
+SELECT id
+FROM orders
+WHERE placed_at < '2016-01-01';
+{% endhighlight %}
+
+*Result:*
+<pre>
+ id
+ 1
+ 4
+ 5
+</pre>
+
+
+## Querying "Aggregates" {#querying-aggregates}
+While getting individual rows is fun, life gets more exciting when we start applying functions.
+
+### Latest order
+When was the latest order placed?
+{% highlight sql %}
+SELECT max(placed_at)
+FROM orders;
+{% endhighlight %}
+
+This doesn't look too bad but we can name result columns:
+{% highlight sql %}
+SELECT max(placed_at) AS latest_order
+FROM orders;
+{% endhighlight %}
+
+*Result:*
+<pre>
+ latest_order
+ 2016-02-25 04:45:14
+</pre>
+
+### How many orders were placed last year?
+
+{% highlight sql %}
+SELECT count(*) AS orders_last_year
+FROM orders
+WHERE placed_at < '2016-01-01';
+{% endhighlight %}
+
+*Result:*
+<pre>
+ orders_last_year
+ 3
+</pre>
+
+## Selecting Data Using Joins
+We have different tables for the different entities of our e-commerce site: `orders`, `products`, `users`, and `order_products`.
+The last table describes the products contained in each order.
+
+### Finding orders by user
+We need to combine, or join, the `orders` table and the `users` table to find out who placed an order.
+
+{% highlight sql %}
+SELECT orders.user_id, orders.placed_at, users.email_address, users.first_name, users.last_name
+FROM orders, users
+WHERE orders.user_id = users.id;
+{% endhighlight %}
+
+*Result:*
+<pre>
+ user_id|placed_at|email_address|first_name|last_name
+ 2|2015-12-04 06:02:30|chris@example.com|Chris|Clouten
+ 4|2016-02-25 04:45:14|imissthe70s@example.com|Cher|
+ 3|2016-02-24 04:12:05|bigfoot@gmail.com||
+ 2|2015-12-29 08:30:09|chris@example.com|Chris|Clouten
+ 3|2015-12-20 20:26:32|bigfoot@gmail.com||
+</pre>
+
+### Which orders were placed last year by users who are admins?
+First, we'll switch to the more common way of writing joins using a `JOIN` keyword.  (Strictly speaking, it's an inner join,
+but that's for another day.)
+
+{% highlight sql %}
+SELECT orders.user_id, orders.placed_at, users.email_address, users.first_name, users.last_name
+FROM orders
+JOIN users ON orders.user_id = users.id;
+{% endhighlight %}
+
+*Result:*
+<pre>
+ user_id|placed_at|email_address|first_name|last_name
+ 2|2015-12-04 06:02:30|chris@example.com|Chris|Clouten
+ 4|2016-02-25 04:45:14|imissthe70s@example.com|Cher|
+ 3|2016-02-24 04:12:05|bigfoot@gmail.com||
+ 2|2015-12-29 08:30:09|chris@example.com|Chris|Clouten
+ 3|2015-12-20 20:26:32|bigfoot@gmail.com||
+</pre>
+
+The job is now to assemble the query with all the predicates (the "if"s):
+
+{% highlight sql %}
+SELECT orders.user_id, orders.placed_at, users.email_address
+FROM orders
+JOIN users ON orders.user_id = users.id
+WHERE orders.placed_at < '2016-01-01' AND users.is_admin;
+{% endhighlight %}
+
+*Result:*
+<pre>
+user_id|placed_at|email_address
+2|2015-12-04 06:02:30|chris@example.com
+2|2015-12-29 08:30:09|chris@example.com
+</pre>
+
+### What did Chris order?
+This will look scary at first, but it's really just applying the same idea again and again...
+
+{% highlight sql %}
+SELECT orders.placed_at, users.email_address, products.name, products.price
+FROM orders
+JOIN users ON orders.user_id = users.id
+JOIN order_products ON orders.id = order_products.order_id
+JOIN products ON order_products.product_id = products.id
+WHERE users.first_name = 'Chris'
+ORDER BY orders.placed_at;
+{% endhighlight %}
+
+*Result:*
+<pre>
+placed_at|email_address|name|price
+2015-12-04 06:02:30|chris@example.com|Foaming Shave Gel|6
+2015-12-04 06:02:30|chris@example.com|Truman Set|15
+2015-12-29 08:30:09|chris@example.com|Truman Set|15
+</pre>
+
+Question for you: How much did Chris spend on this order?
+
+
 ## Exercises for the Reader:
 
 1. Add yourself to the database as a user
